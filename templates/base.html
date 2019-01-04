@@ -1,0 +1,160 @@
+{% load staticfiles %}
+{% load aside_tags %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Welcome to SimulationFuture</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="{% static 'css/blog.css' %}" rel="stylesheet">
+
+    <script src="{% static 'js/jquery.js' %}"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+	
+	{% block hearder_extends %}
+	{% endblock %}
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+
+	<!-- Navigation -->
+	<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+		<div class="container">
+			<div class="navbar-header page-scroll">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					Menu<i class="fa fa-bars"></i>
+				</button>
+				<a class="navbar-brand" href="/">Simulation Future</a>
+			</div>
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'users:contact' %}">Contact</a>
+                    </li>
+                    {% if not user.is_authenticated %}
+                        <li>
+                            <a href="{% url 'users:login' %}?from={{ request.get_full_path }}">登录</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'users:register' %}?from={{ request.get_full_path }}">注册</a>
+                        </li>
+                    {% else %}
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">{{ user.username }} <span class="caret"></span></a>
+                            <ul class="dropdown-menu aria-labelledby="dropdownMenu1">
+                                <li><a style="color:black;" href="{% url 'users:password_change' %}?from={{ request.get_full_path }}">修改密码</a></li>
+                                <li><a style="color:black;" href="{% url 'users:logout' %}?from={{ request.get_full_path }}">退出</a></li>
+                            </ul>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+		</div>
+	</nav>
+
+	<!-- Page Header -->
+	<header class="intro-header " style="background-image: url({% static 'img/home-bg.jpg' %})">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg  col-md">
+                    <div class="site-heading">
+                        <h1>EM Site</h1>
+                        <hr class="small">
+                        <span class="subheading">A man can be destroyed, but not defeated</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+    	<div class="row">
+    		<div class="col-sm-8 blog-main">
+    			{% block main_content %}
+    			{% endblock %}
+
+    			{% block pager %}
+    			{% endblock %}
+    		</div>
+            <div class="col-sm-4">
+                <!-- About Me -->
+                <div class="well">
+                    <h4>About Me</h4>
+                    <div>
+                    <img src="{% static 'img/mypic.png' %}" alt="" class="circular_square text-center" width="280" height="205">
+                    <p style="text-align:justify; text-align-last: justify;"><em>I'm Vincent and welcome to my blog. My interset includes microelectronics, program and electromagnetics. You can cantact with me with your question</em></p>
+                    </div> 
+                    <!-- /.input-group -->
+                </div>
+
+                <!-- Blog Archieves Well -->
+                <div class="well">
+                    <h4>Blog Archieves</h4>
+                    <ol class="list-unstyled">
+                        {% archives as date_list %}
+                        {% for date in date_list %}
+                            <li>
+                                <a href="{% url 'blog:archive' date.year date.month %}">{{ date.year }}年{{ date.month }}月</a>
+                            </li>
+                        {% empty %}
+                            <div class="no-post">暂时没有发布文章!</div>
+                        {% endfor %}
+                    </ol>
+                </div>
+
+                <!-- Blog Categories Well -->
+                <div class="well">
+                    <h4>Blog Categories</h4>
+                    <ol class="list-unstyled">
+                        {% categorys as category_list %}
+                        {% for category in category_list %}
+                            <li>
+                                <a href="{% url 'blog:category' category.pk %}">{{ category.name }}</a>
+                            </li>
+                        {% empty %}
+                            <div class="no-post">暂时没有发布文章!</div>
+                        {% endfor %}
+                    </ol>
+                </div>                
+    		</div>
+    	</div>
+    </div>
+
+    <footer style="margin-top:2px solid #ccc;">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <p class="copyright text-muted">Copyright &copy; Your Website 2016</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+	{% block script_extends %}	
+	{% endblock %}
+</body>
+</html>

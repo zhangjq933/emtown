@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+	
+{% block main_content %}
+	{% for article in articles %}
+		<div class="post-preview">
+			<a href="{% url 'blog:detail' article.pk %}">
+				<h2 class="post-title">
+					{{ article.title }}
+				</h2>
+				<h3 class="post-subtitle">
+					{{ article.body|truncatechars:50|safe}}
+				</h3>
+			</a>
+			<p class="post-meta">Posted by
+				<a href="#">{{ article.author }}</a>
+				{{ article.publish_time }}
+			</p>
+		</div>
+		<hr>
+	{% empty %}
+		<div class="no-post">暂时没有发布文章!</div>
+	{% endfor %}
+{% endblock %}
+
+{% block pager %}
+    <div class="paginator">
+        <ul class="pagination">
+        <li>
+            <a href="?page=
+                {% if articles.has_previous %}
+                    {{articles.previous_page_number}}
+                {% else %}
+                    {{articles.number}}
+                {% endif %}
+                ">
+                &laquo;
+            </a>
+        </li>
+        {% for page in pages.page_range %}
+            <li class="page-item"><a class="page-link" href="?page={{page}}">{{page}}</a></li>
+        {% endfor %}
+        <li>
+            <a href="?page=
+                {% if articles.has_next %}
+                    {{articles.next_page_number}}
+                {% else %}
+                    {{articles.number}}
+                {% endif %}
+            " aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+    </ul>
+    <script type="static/javascript">
+        $(".pagination li:eq({{articles.number}})").addClass("active");
+    </script>
+    </div>
+{% endblock %}
